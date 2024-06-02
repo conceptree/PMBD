@@ -1,4 +1,4 @@
-# ISCTE - Instituito Universitário de Lisboa
+# ISCTE - Instituto Universitário de Lisboa
 
 ## Processamento e Modelacão para Big Data
 
