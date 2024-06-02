@@ -8,6 +8,6 @@ Em termos de ferramentas de implementação, o projeto deve recorrer essencialme
 
 ## Grupo
 
-João Silva
-Nuno Rodrigues
-Tiago Alves
+- João Silva
+- Nuno Rodrigues
+- Tiago Alves
