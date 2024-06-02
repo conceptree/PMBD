@@ -28,6 +28,7 @@ stations_df = spark.read.csv(stations_file_path, header=True, inferSchema=True)
 # Para evitar conflito com as colunas que já existem no dataset original
 stations_df = stations_df.withColumnRenamed("elevation", "station_elevation")  \
                         .withColumnRenamed("latitude", "station_latitude") \
+                        .withColumnRenamed("name", "Location") \
                         .withColumnRenamed("longitude", "station_longitude")
 
 # Juntar o DataFrame original com as localizações das estações
@@ -35,20 +36,27 @@ weather_df_with_location = weather_df.join(stations_df, weather_df.ID == station
 
 # Transformar as temperaturas de décimos de grau para graus Celsius
 weather_df_with_location = weather_df_with_location \
-    .withColumn("maxTempCelsius", col("TMAX") / 10) \
-    .withColumn("minTempCelsius", col("TMIN") / 10)
+    .withColumn("temp_max", col("TMAX") / 10) \
+    .withColumn("temp_min", col("TMIN") / 10)
 
 # Arredondar a elevação para o número inteiro mais próximo
-weather_df_with_location = weather_df_with_location.withColumn("elevationRounded", floor(round(col("Elevation"))))
+weather_df_with_location = weather_df_with_location.withColumn("Elevation", floor(round(col("Elevation"))))
 
 # Renomear colunas EVAP e PRCP
 weather_df_with_location = weather_df_with_location.withColumnRenamed("EVAP", "Evaporation") \
                                                    .withColumnRenamed("PRCP", "Precipitation")
 
+# Filtrar entradas com null em Precipitation, maxTempCelsius ou minTempCelsius
+weather_df_with_location = weather_df_with_location.filter(
+    col("Precipitation").isNotNull() &
+    col("temp_max").isNotNull() &
+    col("temp_min").isNotNull()
+)
+
 # Selecionar colunas relevantes
 weather_df_with_location = weather_df_with_location.select(
-    "ID", "DATE", "maxTempCelsius", "minTempCelsius", "Evaporation", "Precipitation",
-    "Latitude", "Longitude", "elevationRounded", "name"
+    "ID", "DATE", "temp_max", "temp_min", "Precipitation",
+    "Latitude", "Longitude", "Elevation", "Location"
 )
 
 # Salvar resultado final
