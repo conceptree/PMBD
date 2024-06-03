@@ -4,9 +4,6 @@ import os
 os.environ['PYSPARK_PYTHON'] = '/usr/local/bin/python3.11'
 os.environ['PYSPARK_DRIVER_PYTHON'] = '/usr/local/bin/python3.11'
 
-from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, round
-
 # ----------------------------------------------------------------------------------------------------------------- #
 
 from pyspark.sql import SparkSession
